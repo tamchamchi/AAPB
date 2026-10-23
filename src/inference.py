@@ -67,6 +67,10 @@ def parse_args():
         default="refs/pr/26",
         help="Model revision",
     )
+    parser.add_argument(
+        "--device",
+        type=str
+    )
     return parser.parse_args()
 
 
@@ -87,10 +91,17 @@ def main():
     print(f"Loaded {len(r2f_prompts)} prompts from {args.test_file}")
 
     # Load pipeline
-    pipe = AAPBDiffusion3Pipeline.from_pretrained(
-        args.model_id, revision=args.revision
+    torch_dtype = (
+        torch.float16
+        if args.device and args.device.startswith("cuda")
+        else torch.float32
     )
-    pipe = pipe.to("cuda")
+    pipe = AAPBDiffusion3Pipeline.from_pretrained(
+        args.model_id,
+        revision=args.revision,
+        torch_dtype=torch_dtype,
+    )
+    pipe = pipe.to(args.device)
 
     # Generate images
     for i, prompt in enumerate(r2f_prompts):

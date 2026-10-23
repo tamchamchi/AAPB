@@ -9,6 +9,8 @@ export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0}
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+DATA_DIR="/mnt/mmlab2024nas/anhndt/AAPB"
+device="cuda:0"
 export PYTHONPATH="${SCRIPT_DIR}:${PYTHONPATH}"
 
 CATEGORIES=(
@@ -23,7 +25,7 @@ CATEGORIES=(
 )
 
 SEED=${SEED:-42}
-OUT_PATH="${PROJECT_DIR}/output/"
+OUT_PATH="${DATA_DIR}/output/"
 
 echo "=============================="
 echo "AAPB RareBench Inference"
@@ -37,7 +39,8 @@ for cat in "${CATEGORIES[@]}"; do
     python "${SCRIPT_DIR}/inference.py" \
         --test_file "${PROJECT_DIR}/dataset/r2f_prompt/rarebench/${cat}" \
         --out_path "${OUT_PATH}" \
-        --seed "${SEED}"
+        --seed "${SEED}" \
+        --device "${device}"
 done
 
 echo ""
