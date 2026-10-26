@@ -1,7 +1,7 @@
 {
-  "version": 1,
+  "version": 2,
   "purpose": "GEPA anchor instruction search; no test data enters optimization or candidate selection",
-  "group_rule": "For single-property/shape/texture/action files, each consecutive block of four prompts shares one rare-concept family. Families 0-3 are train, family 4 is validation, families 5-9 are test. All single-complex and multi-prompt categories are test-only. This tests transfer from simple to composition-heavy prompts; it does not claim disjoint primitive attributes across splits.",
+  "group_rule": "For single-property/shape/texture/action files, each consecutive block of four prompts shares one rare-concept family. Families 0-3 are train, family 4 is validation, families 5-9 are test. Single-complex and multi-prompt categories (no 4-row family structure) contribute a small, fixed, evenly spaced sample per category to train/val (rows 0,10,20,30 train; 5,25 GEPA-selection val; 15,35 validation audit) so GEPA sees multi-concept AND/BREAK structure during search; the other 32 of 40 rows per category (80%) remain test-only. This hybrid still tests most transfer from simple to composition-heavy prompts; it does not claim disjoint primitive attributes across splits.",
   "input_sha256": {
     "rarebench_multi_1and_gpt4.txt": "285330b17fe3e3dc607c237942000cf7cac816bd8bd37032ef59c73f3ba57927",
     "rarebench_multi_2relation_gpt4.txt": "63d606f8848c331c7a3284a7c806df8bfdce90fa59147f98c3d4bee6791ae7b2",
@@ -863,6 +863,102 @@
       "index": 15,
       "group_id": "rarebench_single_4action_gpt4:family_03",
       "prompt": "A flying rubber duck"
+    },
+    {
+      "category": "rarebench_multi_1and_gpt4",
+      "index": 0,
+      "group_id": "rarebench_multi_1and_gpt4:row_00",
+      "prompt": "a hairy shark and two spotted clams"
+    },
+    {
+      "category": "rarebench_multi_1and_gpt4",
+      "index": 10,
+      "group_id": "rarebench_multi_1and_gpt4:row_10",
+      "prompt": "a horned lion and a wigged elephant"
+    },
+    {
+      "category": "rarebench_multi_1and_gpt4",
+      "index": 20,
+      "group_id": "rarebench_multi_1and_gpt4:row_20",
+      "prompt": "a zebra striped tiger and a tiger striped zebra"
+    },
+    {
+      "category": "rarebench_multi_1and_gpt4",
+      "index": 30,
+      "group_id": "rarebench_multi_1and_gpt4:row_30",
+      "prompt": "a hotdog made of marble and two bananas made of marble"
+    },
+    {
+      "category": "rarebench_multi_2relation_gpt4",
+      "index": 0,
+      "group_id": "rarebench_multi_2relation_gpt4:row_00",
+      "prompt": "A hairy frog is sitting on top of a spotted lizard"
+    },
+    {
+      "category": "rarebench_multi_2relation_gpt4",
+      "index": 10,
+      "group_id": "rarebench_multi_2relation_gpt4:row_10",
+      "prompt": "A wrinkled shark is swimming around a banana shaped car"
+    },
+    {
+      "category": "rarebench_multi_2relation_gpt4",
+      "index": 20,
+      "group_id": "rarebench_multi_2relation_gpt4:row_20",
+      "prompt": "A tiger striped pine tree is leaning against a wigged octopus"
+    },
+    {
+      "category": "rarebench_multi_2relation_gpt4",
+      "index": 30,
+      "group_id": "rarebench_multi_2relation_gpt4:row_30",
+      "prompt": "A hairy octopus dancing with a zebra striped duck is sitting on top of a star shaped cheesecake"
+    },
+    {
+      "category": "rarebench_multi_3complex_gpt4",
+      "index": 0,
+      "group_id": "rarebench_multi_3complex_gpt4:row_00",
+      "prompt": "Two telephone poles kissing like people"
+    },
+    {
+      "category": "rarebench_multi_3complex_gpt4",
+      "index": 10,
+      "group_id": "rarebench_multi_3complex_gpt4:row_10",
+      "prompt": "A diamond-haired mermaid and a black spotted yeti having a tea party on top of a giant yellow lily pad in a glowing, enchanted forest"
+    },
+    {
+      "category": "rarebench_multi_3complex_gpt4",
+      "index": 20,
+      "group_id": "rarebench_multi_3complex_gpt4:row_20",
+      "prompt": "A philosopher spotted pig reading ancient scrolls while a jester duck balances on a unicycle on floating flat clouds"
+    },
+    {
+      "category": "rarebench_multi_3complex_gpt4",
+      "index": 30,
+      "group_id": "rarebench_multi_3complex_gpt4:row_30",
+      "prompt": "A tiger-striped fox chef preparing a gourmet meal for an audience of enchanted garden gnomes, under a gazebo made of gingerbread"
+    },
+    {
+      "category": "rarebench_single_5complex_gpt4",
+      "index": 0,
+      "group_id": "rarebench_single_5complex_gpt4:row_00",
+      "prompt": "A red bird with blue fish tail"
+    },
+    {
+      "category": "rarebench_single_5complex_gpt4",
+      "index": 10,
+      "group_id": "rarebench_single_5complex_gpt4:row_10",
+      "prompt": "A human with eyes on back head"
+    },
+    {
+      "category": "rarebench_single_5complex_gpt4",
+      "index": 20,
+      "group_id": "rarebench_single_5complex_gpt4:row_20",
+      "prompt": "A robotic owl with LED eyes"
+    },
+    {
+      "category": "rarebench_single_5complex_gpt4",
+      "index": 30,
+      "group_id": "rarebench_single_5complex_gpt4:row_30",
+      "prompt": "A lion dressed as Napoleon skiing in the desert"
     }
   ],
   "gepa_selection_validation": [
@@ -913,6 +1009,54 @@
       "index": 18,
       "group_id": "rarebench_single_4action_gpt4:family_04",
       "prompt": "A swimming piano"
+    },
+    {
+      "category": "rarebench_multi_1and_gpt4",
+      "index": 5,
+      "group_id": "rarebench_multi_1and_gpt4:row_05",
+      "prompt": "a wrinkled shark and three spotted clownfishes"
+    },
+    {
+      "category": "rarebench_multi_1and_gpt4",
+      "index": 25,
+      "group_id": "rarebench_multi_1and_gpt4:row_25",
+      "prompt": "a stork made of diamonds and a tulip made of diamonds"
+    },
+    {
+      "category": "rarebench_multi_2relation_gpt4",
+      "index": 5,
+      "group_id": "rarebench_multi_2relation_gpt4:row_05",
+      "prompt": "A horned elephant is balancing a wrinkled globe"
+    },
+    {
+      "category": "rarebench_multi_2relation_gpt4",
+      "index": 25,
+      "group_id": "rarebench_multi_2relation_gpt4:row_25",
+      "prompt": "A hairy glass ball is rolling away from a mustachioed strawberry"
+    },
+    {
+      "category": "rarebench_multi_3complex_gpt4",
+      "index": 5,
+      "group_id": "rarebench_multi_3complex_gpt4:row_05",
+      "prompt": "A lion wearing a detective hat and magnifying glass investigating a crime scene on a pirate ship navigated by penguins"
+    },
+    {
+      "category": "rarebench_multi_3complex_gpt4",
+      "index": 25,
+      "group_id": "rarebench_multi_3complex_gpt4:row_25",
+      "prompt": "A toucan wearing a top hat and monocle, conducting an orchestra of mice playing symphonies on intricate clockwork instruments"
+    },
+    {
+      "category": "rarebench_single_5complex_gpt4",
+      "index": 5,
+      "group_id": "rarebench_single_5complex_gpt4:row_05",
+      "prompt": "A heavily armored infantry doing cossack dance"
+    },
+    {
+      "category": "rarebench_single_5complex_gpt4",
+      "index": 25,
+      "group_id": "rarebench_single_5complex_gpt4:row_25",
+      "prompt": "A knight in armor made of glass"
     }
   ],
   "full_validation_audit": [
@@ -963,6 +1107,54 @@
       "index": 19,
       "group_id": "rarebench_single_4action_gpt4:family_04",
       "prompt": "A swimming smartphone"
+    },
+    {
+      "category": "rarebench_multi_1and_gpt4",
+      "index": 15,
+      "group_id": "rarebench_multi_1and_gpt4:row_15",
+      "prompt": "a mustachioed strawberry and two bearded apples"
+    },
+    {
+      "category": "rarebench_multi_1and_gpt4",
+      "index": 35,
+      "group_id": "rarebench_multi_1and_gpt4:row_35",
+      "prompt": "a shrimp made of steel and a spotted dog"
+    },
+    {
+      "category": "rarebench_multi_2relation_gpt4",
+      "index": 15,
+      "group_id": "rarebench_multi_2relation_gpt4:row_15",
+      "prompt": "A dancing bulldog is staring at a black white checkered pineapple"
+    },
+    {
+      "category": "rarebench_multi_2relation_gpt4",
+      "index": 35,
+      "group_id": "rarebench_multi_2relation_gpt4:row_35",
+      "prompt": "A horned whale walking with a black white checkered dragonfly is leaning against a mustachioed lizard"
+    },
+    {
+      "category": "rarebench_multi_3complex_gpt4",
+      "index": 15,
+      "group_id": "rarebench_multi_3complex_gpt4:row_15",
+      "prompt": "A black-white wizard checkered cat casting spells with a magic wand made of vines, and a superhero pig flying through a yellow cloud of sparkles overhead"
+    },
+    {
+      "category": "rarebench_multi_3complex_gpt4",
+      "index": 35,
+      "group_id": "rarebench_multi_3complex_gpt4:row_35",
+      "prompt": "A spiky dolphin explorer mapping the stars from a submarine shaped like a giant seashell, accompanied by an octopus assistant navigating the depths"
+    },
+    {
+      "category": "rarebench_single_5complex_gpt4",
+      "index": 15,
+      "group_id": "rarebench_single_5complex_gpt4:row_15",
+      "prompt": "A soccer ball with triangular check pattern"
+    },
+    {
+      "category": "rarebench_single_5complex_gpt4",
+      "index": 35,
+      "group_id": "rarebench_single_5complex_gpt4:row_35",
+      "prompt": "A bicycle with spider legs that glow in the dark"
     }
   ],
   "final_test": [
@@ -1448,962 +1640,770 @@
     },
     {
       "category": "rarebench_multi_1and_gpt4",
-      "index": 0,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_00",
-      "prompt": "a hairy shark and two spotted clams"
-    },
-    {
-      "category": "rarebench_multi_1and_gpt4",
       "index": 1,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_01",
+      "group_id": "rarebench_multi_1and_gpt4:row_01",
       "prompt": "a thorny clam and a horned monkfish"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 2,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_02",
+      "group_id": "rarebench_multi_1and_gpt4:row_02",
       "prompt": "a wrinkled monkfish and two wigged octopuses"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 3,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_03",
+      "group_id": "rarebench_multi_1and_gpt4:row_03",
       "prompt": "a thorny shark and a mustachioed dolphin"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 4,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_04",
+      "group_id": "rarebench_multi_1and_gpt4:row_04",
       "prompt": "a hairy dolphin and two wrinkled sharks"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
-      "index": 5,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_05",
-      "prompt": "a wrinkled shark and three spotted clownfishes"
-    },
-    {
-      "category": "rarebench_multi_1and_gpt4",
       "index": 6,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_06",
+      "group_id": "rarebench_multi_1and_gpt4:row_06",
       "prompt": "a bearded frog and two mustachioed parrots"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 7,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_07",
+      "group_id": "rarebench_multi_1and_gpt4:row_07",
       "prompt": "a wooly alligator and a horned squid"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 8,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_08",
+      "group_id": "rarebench_multi_1and_gpt4:row_08",
       "prompt": "a mustachioed monkey and a wigged eagle"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 9,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_09",
+      "group_id": "rarebench_multi_1and_gpt4:row_09",
       "prompt": "a wrinkled glass ball and a bearded globe"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
-      "index": 10,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_10",
-      "prompt": "a horned lion and a wigged elephant"
-    },
-    {
-      "category": "rarebench_multi_1and_gpt4",
       "index": 11,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_11",
+      "group_id": "rarebench_multi_1and_gpt4:row_11",
       "prompt": "a hairless sheep and a bearded panda"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 12,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_12",
+      "group_id": "rarebench_multi_1and_gpt4:row_12",
       "prompt": "a wrinkled snake and two spotted rhinos"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 13,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_13",
+      "group_id": "rarebench_multi_1and_gpt4:row_13",
       "prompt": "a wigged giraffe and a bearded eagle"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 14,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_14",
+      "group_id": "rarebench_multi_1and_gpt4:row_14",
       "prompt": "a spotted pig and a wrinkled banana"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
-      "index": 15,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_15",
-      "prompt": "a mustachioed strawberry and two bearded apples"
-    },
-    {
-      "category": "rarebench_multi_1and_gpt4",
       "index": 16,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_16",
+      "group_id": "rarebench_multi_1and_gpt4:row_16",
       "prompt": "a hairless yak and a spotted tulip"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 17,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_17",
+      "group_id": "rarebench_multi_1and_gpt4:row_17",
       "prompt": "a horned pelican and a spotted lion"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 18,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_18",
+      "group_id": "rarebench_multi_1and_gpt4:row_18",
       "prompt": "a wooly banana and a horned lemon"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 19,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_19",
+      "group_id": "rarebench_multi_1and_gpt4:row_19",
       "prompt": "a thorny horse and two bearded monkeys"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
-      "index": 20,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_20",
-      "prompt": "a zebra striped tiger and a tiger striped zebra"
-    },
-    {
-      "category": "rarebench_multi_1and_gpt4",
       "index": 21,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_21",
+      "group_id": "rarebench_multi_1and_gpt4:row_21",
       "prompt": "a donut shaped watermelon and a hamburger made of glass"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 22,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_22",
+      "group_id": "rarebench_multi_1and_gpt4:row_22",
       "prompt": "a cactus made of steel and two sunflowers made of glass"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 23,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_23",
+      "group_id": "rarebench_multi_1and_gpt4:row_23",
       "prompt": "a heart shaped moon and a star shaped spaceship"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 24,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_24",
+      "group_id": "rarebench_multi_1and_gpt4:row_24",
       "prompt": "a wigged polar bear and a wigged pig"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
-      "index": 25,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_25",
-      "prompt": "a stork made of diamonds and a tulip made of diamonds"
-    },
-    {
-      "category": "rarebench_multi_1and_gpt4",
       "index": 26,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_26",
+      "group_id": "rarebench_multi_1and_gpt4:row_26",
       "prompt": "a tiger striped rock and a zebra striped palm tree"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 27,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_27",
+      "group_id": "rarebench_multi_1and_gpt4:row_27",
       "prompt": "a star shaped cheese cake and a banana shaped drum"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 28,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_28",
+      "group_id": "rarebench_multi_1and_gpt4:row_28",
       "prompt": "an ax shaped guitar and an ax shaped violin"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 29,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_29",
+      "group_id": "rarebench_multi_1and_gpt4:row_29",
       "prompt": "a butterfly shaped dish and a star shaped soccerball"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
-      "index": 30,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_30",
-      "prompt": "a hotdog made of marble and two bananas made of marble"
-    },
-    {
-      "category": "rarebench_multi_1and_gpt4",
       "index": 31,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_31",
+      "group_id": "rarebench_multi_1and_gpt4:row_31",
       "prompt": "a mustachioed monkey and a zebra striped rock"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 32,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_32",
+      "group_id": "rarebench_multi_1and_gpt4:row_32",
       "prompt": "an oval shaped laptop and a diamond shaped durian"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 33,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_33",
+      "group_id": "rarebench_multi_1and_gpt4:row_33",
       "prompt": "a cactus made of steel and a flower patterned mirror"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 34,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_34",
+      "group_id": "rarebench_multi_1and_gpt4:row_34",
       "prompt": "a hairless yak and a horned lemon"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
-      "index": 35,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_35",
-      "prompt": "a shrimp made of steel and a spotted dog"
-    },
-    {
-      "category": "rarebench_multi_1and_gpt4",
       "index": 36,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_36",
+      "group_id": "rarebench_multi_1and_gpt4:row_36",
       "prompt": "a globe made of glass and a cake made of clouds"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 37,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_37",
+      "group_id": "rarebench_multi_1and_gpt4:row_37",
       "prompt": "a flower patterned deer and a heart shaped diamonds"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 38,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_38",
+      "group_id": "rarebench_multi_1and_gpt4:row_38",
       "prompt": "a flower patterned deer and a black white checkered pineapple"
     },
     {
       "category": "rarebench_multi_1and_gpt4",
       "index": 39,
-      "group_id": "rarebench_multi_1and_gpt4:heldout_39",
+      "group_id": "rarebench_multi_1and_gpt4:row_39",
       "prompt": "a tiger striped golden retriever and an oval shaped table"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
-      "index": 0,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_00",
-      "prompt": "A hairy frog is sitting on top of a spotted lizard"
-    },
-    {
-      "category": "rarebench_multi_2relation_gpt4",
       "index": 1,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_01",
+      "group_id": "rarebench_multi_2relation_gpt4:row_01",
       "prompt": "A thorny snake is coiling around a star shaped drum"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 2,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_02",
+      "group_id": "rarebench_multi_2relation_gpt4:row_02",
       "prompt": "A wooly alligator is guarding a banana shaped bottle"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 3,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_03",
+      "group_id": "rarebench_multi_2relation_gpt4:row_03",
       "prompt": "A spotted lion is lounging on an ax shaped bed"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 4,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_04",
+      "group_id": "rarebench_multi_2relation_gpt4:row_04",
       "prompt": "A bearded giraffe is admiring a butterfly shaped dish"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
-      "index": 5,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_05",
-      "prompt": "A horned elephant is balancing a wrinkled globe"
-    },
-    {
-      "category": "rarebench_multi_2relation_gpt4",
       "index": 6,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_06",
+      "group_id": "rarebench_multi_2relation_gpt4:row_06",
       "prompt": "A thorny dolphin is leaping over a star shaped bed"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 7,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_07",
+      "group_id": "rarebench_multi_2relation_gpt4:row_07",
       "prompt": "A star shaped tennis ball is bouncing off a wigged octopus"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 8,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_08",
+      "group_id": "rarebench_multi_2relation_gpt4:row_08",
       "prompt": "A mustachioed monkey is hanging from a thorny hotdog"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 9,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_09",
+      "group_id": "rarebench_multi_2relation_gpt4:row_09",
       "prompt": "A wigged polar bear is resting beside a butterfly shaped airplane"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
-      "index": 10,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_10",
-      "prompt": "A wrinkled shark is swimming around a banana shaped car"
-    },
-    {
-      "category": "rarebench_multi_2relation_gpt4",
       "index": 11,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_11",
+      "group_id": "rarebench_multi_2relation_gpt4:row_11",
       "prompt": "A hairy octopus is hugging a wigged polar bear"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 12,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_12",
+      "group_id": "rarebench_multi_2relation_gpt4:row_12",
       "prompt": "A horned whale is chasing a mustachioed clownfish"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 13,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_13",
+      "group_id": "rarebench_multi_2relation_gpt4:row_13",
       "prompt": "A flower patterned otter is playing with a butterfly shaped bowl"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 14,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_14",
+      "group_id": "rarebench_multi_2relation_gpt4:row_14",
       "prompt": "A wrinkled globe is resting beside an ax shaped chocolate"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
-      "index": 15,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_15",
-      "prompt": "A dancing bulldog is staring at a black white checkered pineapple"
-    },
-    {
-      "category": "rarebench_multi_2relation_gpt4",
       "index": 16,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_16",
+      "group_id": "rarebench_multi_2relation_gpt4:row_16",
       "prompt": "A hairy clam is perched on a zebra striped duck"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 17,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_17",
+      "group_id": "rarebench_multi_2relation_gpt4:row_17",
       "prompt": "A star shaped drum is being carried by a wooly monkfish"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 18,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_18",
+      "group_id": "rarebench_multi_2relation_gpt4:row_18",
       "prompt": "A dancing vase is sharing space with a banana shaped car"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 19,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_19",
+      "group_id": "rarebench_multi_2relation_gpt4:row_19",
       "prompt": "A thorny building is overshadowing a bearded snowman"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
-      "index": 20,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_20",
-      "prompt": "A tiger striped pine tree is leaning against a wigged octopus"
-    },
-    {
-      "category": "rarebench_multi_2relation_gpt4",
       "index": 21,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_21",
+      "group_id": "rarebench_multi_2relation_gpt4:row_21",
       "prompt": "A wooly shark is swimming around a banana shaped pumpkin"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 22,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_22",
+      "group_id": "rarebench_multi_2relation_gpt4:row_22",
       "prompt": "A zebra striped rock is balancing on top of a dancing bulldog"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 23,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_23",
+      "group_id": "rarebench_multi_2relation_gpt4:row_23",
       "prompt": "A thorny hotdog is lying next to a swimming piano"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 24,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_24",
+      "group_id": "rarebench_multi_2relation_gpt4:row_24",
       "prompt": "A bearded giraffe is eating a butterfly shaped dish"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
-      "index": 25,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_25",
-      "prompt": "A hairy glass ball is rolling away from a mustachioed strawberry"
-    },
-    {
-      "category": "rarebench_multi_2relation_gpt4",
       "index": 26,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_26",
+      "group_id": "rarebench_multi_2relation_gpt4:row_26",
       "prompt": "A horned lemon is riding a flower patterned deer"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 27,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_27",
+      "group_id": "rarebench_multi_2relation_gpt4:row_27",
       "prompt": "A floating cheesecake is being admired by a wrinkled squid"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 28,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_28",
+      "group_id": "rarebench_multi_2relation_gpt4:row_28",
       "prompt": "A spotted lion is roaring at a peach walking with legs"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 29,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_29",
+      "group_id": "rarebench_multi_2relation_gpt4:row_29",
       "prompt": "A sunflower running with legs is racing a spotted tulip"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
-      "index": 30,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_30",
-      "prompt": "A hairy octopus dancing with a zebra striped duck is sitting on top of a star shaped cheesecake"
-    },
-    {
-      "category": "rarebench_multi_2relation_gpt4",
       "index": 31,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_31",
+      "group_id": "rarebench_multi_2relation_gpt4:row_31",
       "prompt": "A mustachioed strawberry driving a banana shaped car is following a dancing koala"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 32,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_32",
+      "group_id": "rarebench_multi_2relation_gpt4:row_32",
       "prompt": "A flower patterned deer flying with a black white checkered pineapple is resting on an oval shaped table"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 33,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_33",
+      "group_id": "rarebench_multi_2relation_gpt4:row_33",
       "prompt": "A tiger striped monkey swimming with a butterfly shaped airplane is approaching a star shaped drum"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 34,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_34",
+      "group_id": "rarebench_multi_2relation_gpt4:row_34",
       "prompt": "A wrinkled shark running with a zebra striped palm tree is jumping over a banana shaped pumpkin"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
-      "index": 35,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_35",
-      "prompt": "A horned whale walking with a black white checkered dragonfly is leaning against a mustachioed lizard"
-    },
-    {
-      "category": "rarebench_multi_2relation_gpt4",
       "index": 36,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_36",
+      "group_id": "rarebench_multi_2relation_gpt4:row_36",
       "prompt": "A mustachioed monkey pulling a flying rubber duck is looking at an ax shaped guitar"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 37,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_37",
+      "group_id": "rarebench_multi_2relation_gpt4:row_37",
       "prompt": "A dancing vase carried by a hairy clam is chasing a flower patterned mirror"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 38,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_38",
+      "group_id": "rarebench_multi_2relation_gpt4:row_38",
       "prompt": "A bearded giraffe swimming with a dancing bulldog is smiling at a banana shaped bottle"
     },
     {
       "category": "rarebench_multi_2relation_gpt4",
       "index": 39,
-      "group_id": "rarebench_multi_2relation_gpt4:heldout_39",
+      "group_id": "rarebench_multi_2relation_gpt4:row_39",
       "prompt": "A mustachioed clownfish riding a butterfly shaped spaceship is playing with a spotted clownfish"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
-      "index": 0,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_00",
-      "prompt": "Two telephone poles kissing like people"
-    },
-    {
-      "category": "rarebench_multi_3complex_gpt4",
       "index": 1,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_01",
+      "group_id": "rarebench_multi_3complex_gpt4:row_01",
       "prompt": "A red bear and green bear fighting while sitting on a bench made of glass"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 2,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_02",
+      "group_id": "rarebench_multi_3complex_gpt4:row_02",
       "prompt": "A blue ant hides in the forest in military uniform, aiming a gun at a red enemy ant on horseback"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 3,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_03",
+      "group_id": "rarebench_multi_3complex_gpt4:row_03",
       "prompt": "A rabbit in medieval armor and a raccoon in pajamas milling on the moon"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 4,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_04",
+      "group_id": "rarebench_multi_3complex_gpt4:row_04",
       "prompt": "A horned giraffe reading a newspaper while sitting in a hot air balloon flying over a city made of giant mushrooms"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
-      "index": 5,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_05",
-      "prompt": "A lion wearing a detective hat and magnifying glass investigating a crime scene on a pirate ship navigated by penguins"
-    },
-    {
-      "category": "rarebench_multi_3complex_gpt4",
       "index": 6,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_06",
+      "group_id": "rarebench_multi_3complex_gpt4:row_06",
       "prompt": "Two decorated indian elephants playing chess on a floating island surrounded by pink dolphins painting rainbows in the sky"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 7,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_07",
+      "group_id": "rarebench_multi_3complex_gpt4:row_07",
       "prompt": "A red spotted squirrel with goggles riding on the back of a robot dinosaur, exploring a futuristic city filled with trees made of glass"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 8,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_08",
+      "group_id": "rarebench_multi_3complex_gpt4:row_08",
       "prompt": "A ballet-dancing polar bear with red toe shooes and a jazz-playing kangaroo with a blue trumpet performing together on a stage made of ice"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 9,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_09",
+      "group_id": "rarebench_multi_3complex_gpt4:row_09",
       "prompt": "An octopus knitting a purple scarf while sitting on a cloud beside a bearded eagle reading a book about ancient civilizations"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
-      "index": 10,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_10",
-      "prompt": "A diamond-haired mermaid and a black spotted yeti having a tea party on top of a giant yellow lily pad in a glowing, enchanted forest"
-    },
-    {
-      "category": "rarebench_multi_3complex_gpt4",
       "index": 11,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_11",
+      "group_id": "rarebench_multi_3complex_gpt4:row_11",
       "prompt": "A knighted turtle and a wizarding owl debating philosophy in an underwater library made of coral"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 12,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_12",
+      "group_id": "rarebench_multi_3complex_gpt4:row_12",
       "prompt": "A giant pink-spotted panda hiking up a mountain with a spike backpack full of glittering stars, accompanied by a green firefly that doubles as a flashlight"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 13,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_13",
+      "group_id": "rarebench_multi_3complex_gpt4:row_13",
       "prompt": "A red dragon with a mane on its back and a unicorn made of diamond rollerblading through a neon-lit alien cityscape at high speed"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 14,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_14",
+      "group_id": "rarebench_multi_3complex_gpt4:row_14",
       "prompt": "A spiny turtle on its back paints a masterpiece at its easel while a dragon photographer captures the moment in a desert made of candy"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
-      "index": 15,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_15",
-      "prompt": "A black-white wizard checkered cat casting spells with a magic wand made of vines, and a superhero pig flying through a yellow cloud of sparkles overhead"
-    },
-    {
-      "category": "rarebench_multi_3complex_gpt4",
       "index": 16,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_16",
+      "group_id": "rarebench_multi_3complex_gpt4:row_16",
       "prompt": "A brown hamster piloting a miniature spaceship navigating through a forest of gigantic broccoli trees, with a mustachioed mouse co-pilot"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 17,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_17",
+      "group_id": "rarebench_multi_3complex_gpt4:row_17",
       "prompt": "A ninja fox with two red tails and a samurai chipmunk with a blue tail dueling atop a giant floating lotus flower under a sky lit with yellow auroras"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 18,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_18",
+      "group_id": "rarebench_multi_3complex_gpt4:row_18",
       "prompt": "A scuba-diving elephant exploring an underwater Atlantis ruled by a crowned seahorse and guarded by jellyfish knights"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 19,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_19",
+      "group_id": "rarebench_multi_3complex_gpt4:row_19",
       "prompt": "A pair of roller-skating flamingos made of Lego performing acrobatics on a tightrope stretched between two skyscrapers made of ice cream"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
-      "index": 20,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_20",
-      "prompt": "A philosopher spotted pig reading ancient scrolls while a jester duck balances on a unicycle on floating flat clouds"
-    },
-    {
-      "category": "rarebench_multi_3complex_gpt4",
       "index": 21,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_21",
+      "group_id": "rarebench_multi_3complex_gpt4:row_21",
       "prompt": "A jazz-band composed of penguins playing instruments made of ice while a green scarfed snowman conductor leads them in a volcano"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 22,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_22",
+      "group_id": "rarebench_multi_3complex_gpt4:row_22",
       "prompt": "A tiger skydiving with a parachute shaped like a butterfly and landing on a beach where a hairy crab and a blue shirmp play volleyball"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 23,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_23",
+      "group_id": "rarebench_multi_3complex_gpt4:row_23",
       "prompt": "A giant spider with red legs knitting a webbed hammock between stars in deep space, while an astronaut pink ant relaxes in it"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 24,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_24",
+      "group_id": "rarebench_multi_3complex_gpt4:row_24",
       "prompt": "A walrus made of glass in a detective trench coat examining ancient hieroglyphs inside a pyramid guarded by robot cobras"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
-      "index": 25,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_25",
-      "prompt": "A toucan wearing a top hat and monocle, conducting an orchestra of mice playing symphonies on intricate clockwork instruments"
-    },
-    {
-      "category": "rarebench_multi_3complex_gpt4",
       "index": 26,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_26",
+      "group_id": "rarebench_multi_3complex_gpt4:row_26",
       "prompt": "A thorny kangaroo riding a unicycle on a tightrope stretched across a canyon filled with floating jellyfish emitting soft, glowing lights"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 27,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_27",
+      "group_id": "rarebench_multi_3complex_gpt4:row_27",
       "prompt": "A snow leopard ice-skating gracefully across a frozen lake under a churros-and-cotton-candy sky, accompanied by a tap-dancing penguin"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 28,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_28",
+      "group_id": "rarebench_multi_3complex_gpt4:row_28",
       "prompt": "A knighted turtle with a heart-shaped shell jousting with a bard raccoon on steeds made of fire and water in a magical coliseum"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 29,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_29",
+      "group_id": "rarebench_multi_3complex_gpt4:row_29",
       "prompt": "A frog wearing aviator goggles and a leather jacket, flying a miniature biplane through a jungle where trees are made of giant rainbow colored sunflowers"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
-      "index": 30,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_30",
-      "prompt": "A tiger-striped fox chef preparing a gourmet meal for an audience of enchanted garden gnomes, under a gazebo made of gingerbread"
-    },
-    {
-      "category": "rarebench_multi_3complex_gpt4",
       "index": 31,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_31",
+      "group_id": "rarebench_multi_3complex_gpt4:row_31",
       "prompt": "A moose painter creating a mural on a canvas waterfall, with help from a horned beaver who’s sculpting statues out of driftwood below"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 32,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_32",
+      "group_id": "rarebench_multi_3complex_gpt4:row_32",
       "prompt": "A hairless llama fashion designer walking the runway with mannequins, while a rooster DJ mixes tracks in a techno barnyard rave"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 33,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_33",
+      "group_id": "rarebench_multi_3complex_gpt4:row_33",
       "prompt": "A horned snail dressed as a wizard casting spells from an ancient book, while a butterfly knight stands guard with a shining sword in an enchanted meadow"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 34,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_34",
+      "group_id": "rarebench_multi_3complex_gpt4:row_34",
       "prompt": "A chameleon artist painting a masterpiece that changes colors in a studio made of star-shaped seashells, with a horned parrot critic giving feedback"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
-      "index": 35,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_35",
-      "prompt": "A spiky dolphin explorer mapping the stars from a submarine shaped like a giant seashell, accompanied by an octopus assistant navigating the depths"
-    },
-    {
-      "category": "rarebench_multi_3complex_gpt4",
       "index": 36,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_36",
+      "group_id": "rarebench_multi_3complex_gpt4:row_36",
       "prompt": "A striped kangaroo soccer player going for a goal on a field made of emeralds while a smiling koala referee watches from a eucalyptus tower"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 37,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_37",
+      "group_id": "rarebench_multi_3complex_gpt4:row_37",
       "prompt": "A peacock fashion designer sewing vibrant dresses on a sewing machine made of vines, with a pink-striped zebra model showing off the designs"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 38,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_38",
+      "group_id": "rarebench_multi_3complex_gpt4:row_38",
       "prompt": "A beehive concert hall made of diamonds where bees play tiny violins and a cricket conductor leads an orchestra made of forest critters"
     },
     {
       "category": "rarebench_multi_3complex_gpt4",
       "index": 39,
-      "group_id": "rarebench_multi_3complex_gpt4:heldout_39",
+      "group_id": "rarebench_multi_3complex_gpt4:row_39",
       "prompt": "A wigged rhino librarian organizing a library of floating books in the clouds, with an electric pigeon assistant flying around to fetch the volumes needed"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
-      "index": 0,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_00",
-      "prompt": "A red bird with blue fish tail"
-    },
-    {
-      "category": "rarebench_single_5complex_gpt4",
       "index": 1,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_01",
+      "group_id": "rarebench_single_5complex_gpt4:row_01",
       "prompt": "A bearded stork running on the cloud"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 2,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_02",
+      "group_id": "rarebench_single_5complex_gpt4:row_02",
       "prompt": "A wigged rainbow jellyfish"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 3,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_03",
+      "group_id": "rarebench_single_5complex_gpt4:row_03",
       "prompt": "A dragonfly with butterfly wings"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 4,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_04",
+      "group_id": "rarebench_single_5complex_gpt4:row_04",
       "prompt": "A spotted cow with a pig noise"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
-      "index": 5,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_05",
-      "prompt": "A heavily armored infantry doing cossack dance"
-    },
-    {
-      "category": "rarebench_single_5complex_gpt4",
       "index": 6,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_06",
+      "group_id": "rarebench_single_5complex_gpt4:row_06",
       "prompt": "A human face crying with diamond hair"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 7,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_07",
+      "group_id": "rarebench_single_5complex_gpt4:row_07",
       "prompt": "A wrecked car made of clouds"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 8,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_08",
+      "group_id": "rarebench_single_5complex_gpt4:row_08",
       "prompt": "A burning ice cream"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 9,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_09",
+      "group_id": "rarebench_single_5complex_gpt4:row_09",
       "prompt": "A giant mushroom shaped building"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
-      "index": 10,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_10",
-      "prompt": "A human with eyes on back head"
-    },
-    {
-      "category": "rarebench_single_5complex_gpt4",
       "index": 11,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_11",
+      "group_id": "rarebench_single_5complex_gpt4:row_11",
       "prompt": "A phd doctor dinosaur wearing a blue lab coat"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 12,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_12",
+      "group_id": "rarebench_single_5complex_gpt4:row_12",
       "prompt": "A skyblue unicorn doing kung fu"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 13,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_13",
+      "group_id": "rarebench_single_5complex_gpt4:row_13",
       "prompt": "A transperant panda wrestling under a red uniform"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 14,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_14",
+      "group_id": "rarebench_single_5complex_gpt4:row_14",
       "prompt": "A honeycomb pattern made of triangles"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
-      "index": 15,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_15",
-      "prompt": "A soccer ball with triangular check pattern"
-    },
-    {
-      "category": "rarebench_single_5complex_gpt4",
       "index": 16,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_16",
+      "group_id": "rarebench_single_5complex_gpt4:row_16",
       "prompt": "A horned bearded spotted racoon smiling"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 17,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_17",
+      "group_id": "rarebench_single_5complex_gpt4:row_17",
       "prompt": "A pink-haired mermaid with holographic scales"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 18,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_18",
+      "group_id": "rarebench_single_5complex_gpt4:row_18",
       "prompt": "A red griffin wearing a tuxedo"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 19,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_19",
+      "group_id": "rarebench_single_5complex_gpt4:row_19",
       "prompt": "A polar bear with wings of a phoenix"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
-      "index": 20,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_20",
-      "prompt": "A robotic owl with LED eyes"
-    },
-    {
-      "category": "rarebench_single_5complex_gpt4",
       "index": 21,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_21",
+      "group_id": "rarebench_single_5complex_gpt4:row_21",
       "prompt": "A clock with tree roots growing out of it"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 22,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_22",
+      "group_id": "rarebench_single_5complex_gpt4:row_22",
       "prompt": "A skyscraper made entirely of ice cream cones"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 23,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_23",
+      "group_id": "rarebench_single_5complex_gpt4:row_23",
       "prompt": "A moon made of living vines"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 24,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_24",
+      "group_id": "rarebench_single_5complex_gpt4:row_24",
       "prompt": "A levitating red teapot pouring stars"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
-      "index": 25,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_25",
-      "prompt": "A knight in armor made of glass"
-    },
-    {
-      "category": "rarebench_single_5complex_gpt4",
       "index": 26,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_26",
+      "group_id": "rarebench_single_5complex_gpt4:row_26",
       "prompt": "A hairy penguin surfing on a candy cane"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 27,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_27",
+      "group_id": "rarebench_single_5complex_gpt4:row_27",
       "prompt": "A pirate sailing on a pyramid-shaped boat"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 28,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_28",
+      "group_id": "rarebench_single_5complex_gpt4:row_28",
       "prompt": "A fisherman catching black clouds"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 29,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_29",
+      "group_id": "rarebench_single_5complex_gpt4:row_29",
       "prompt": "A pink crocodile paragliding between skyscrapers"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
-      "index": 30,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_30",
-      "prompt": "A lion dressed as Napoleon skiing in the desert"
-    },
-    {
-      "category": "rarebench_single_5complex_gpt4",
       "index": 31,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_31",
+      "group_id": "rarebench_single_5complex_gpt4:row_31",
       "prompt": "A rainbow horse with eight legs runs at an incredible speed, leaving a cloud of dust in its wake"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 32,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_32",
+      "group_id": "rarebench_single_5complex_gpt4:row_32",
       "prompt": "A centaur with a body of peacock adorned with shimmering purple and emerald feathers"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 33,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_33",
+      "group_id": "rarebench_single_5complex_gpt4:row_33",
       "prompt": "A four-armed ninja with white hair in a blue gi"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 34,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_34",
+      "group_id": "rarebench_single_5complex_gpt4:row_34",
       "prompt": "A blue elepant spitting fire while floating in the air"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
-      "index": 35,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_35",
-      "prompt": "A bicycle with spider legs that glow in the dark"
-    },
-    {
-      "category": "rarebench_single_5complex_gpt4",
       "index": 36,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_36",
+      "group_id": "rarebench_single_5complex_gpt4:row_36",
       "prompt": "A seahorse with a lightbulb head navigating through a labyrinthine coral reef ecosystem"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 37,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_37",
+      "group_id": "rarebench_single_5complex_gpt4:row_37",
       "prompt": "A human with a watermelon head adorned etched with ancient runes"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 38,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_38",
+      "group_id": "rarebench_single_5complex_gpt4:row_38",
       "prompt": "A yellow self-watering flower pot"
     },
     {
       "category": "rarebench_single_5complex_gpt4",
       "index": 39,
-      "group_id": "rarebench_single_5complex_gpt4:heldout_39",
+      "group_id": "rarebench_single_5complex_gpt4:row_39",
       "prompt": "A globe with the ocean colored brown and the land colored blue under antique lighting"
     }
   ]

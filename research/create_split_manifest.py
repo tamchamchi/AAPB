@@ -88,10 +88,28 @@ def main() -> None:
                 test.extend(entries)
         group_audit[category] = family_prefixes
 
-    # Composition-heavy categories are fully held out from prompt evolution.
+    # Composition-heavy categories are mostly held out from prompt evolution
+    # (transfer test), but each contributes a small, evenly spaced, fixed
+    # sample to train/val so GEPA sees the multi-concept AND/BREAK structure
+    # during search too. 8 of 40 rows per category (20%) go to train/val;
+    # the remaining 32 (80%) stay test-only.
     complex_categories = sorted(set(data) - set(SIMPLE_CATEGORIES))
+    COMPLEX_HOLD_INDICES = list(range(0, 40, 5))  # [0, 5, 10, 15, 20, 25, 30, 35]
+    COMPLEX_TRAIN_INDICES = {COMPLEX_HOLD_INDICES[i] for i in (0, 2, 4, 6)}  # 0, 10, 20, 30
+    COMPLEX_VAL_SEARCH_INDICES = {COMPLEX_HOLD_INDICES[i] for i in (1, 5)}  # 5, 25
+    COMPLEX_VAL_AUDIT_INDICES = {COMPLEX_HOLD_INDICES[i] for i in (3, 7)}  # 15, 35
     for category in complex_categories:
-        test.extend(item(category, i, f"{category}:heldout_{i:02d}", prompt) for i, prompt in enumerate(data[category]))
+        for i, prompt in enumerate(data[category]):
+            group_id = f"{category}:row_{i:02d}"
+            entry = item(category, i, group_id, prompt)
+            if i in COMPLEX_TRAIN_INDICES:
+                train.append(entry)
+            elif i in COMPLEX_VAL_SEARCH_INDICES:
+                val_search.append(entry)
+            elif i in COMPLEX_VAL_AUDIT_INDICES:
+                val_audit.append(entry)
+            else:
+                test.append(entry)
 
     split_ids = {
         name: {(entry["category"], entry["index"]) for entry in entries}
@@ -99,19 +117,31 @@ def main() -> None:
     }
     if split_ids["train"] & split_ids["val_search"] or split_ids["train"] & split_ids["test"] or split_ids["val_search"] & split_ids["test"]:
         raise ValueError("Prompt-level leakage detected between search splits")
-    if len(train) != 64 or len(val_search) != 8 or len(val_audit) != 8 or len(test) != 240:
+    expected_train = 64 + len(complex_categories) * len(COMPLEX_TRAIN_INDICES)
+    expected_val_search = 8 + len(complex_categories) * len(COMPLEX_VAL_SEARCH_INDICES)
+    expected_val_audit = 8 + len(complex_categories) * len(COMPLEX_VAL_AUDIT_INDICES)
+    expected_test = 240 - len(complex_categories) * len(COMPLEX_HOLD_INDICES)
+    if (
+        len(train) != expected_train
+        or len(val_search) != expected_val_search
+        or len(val_audit) != expected_val_audit
+        or len(test) != expected_test
+    ):
         raise ValueError(
             f"Unexpected split sizes train={len(train)}, val={len(val_search)}, "
             f"audit={len(val_audit)}, test={len(test)}"
         )
 
     manifest = {
-        "version": 1,
+        "version": 2,
         "purpose": "GEPA anchor instruction search; no test data enters optimization or candidate selection",
         "group_rule": (
             "For single-property/shape/texture/action files, each consecutive block of four prompts shares one "
             "rare-concept family. Families 0-3 are train, family 4 is validation, families 5-9 are test. "
-            "All single-complex and multi-prompt categories are test-only. This tests transfer from simple to "
+            "Single-complex and multi-prompt categories (no 4-row family structure) contribute a small, fixed, "
+            "evenly spaced sample per category to train/val (rows 0,10,20,30 train; 5,25 GEPA-selection val; "
+            "15,35 validation audit) so GEPA sees multi-concept AND/BREAK structure during search; the other 32 "
+            "of 40 rows per category (80%) remain test-only. This hybrid still tests most transfer from simple to "
             "composition-heavy prompts; it does not claim disjoint primitive attributes across splits."
         ),
         "input_sha256": hashes,

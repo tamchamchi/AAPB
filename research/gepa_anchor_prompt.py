@@ -24,7 +24,14 @@ from gepa.optimize_anything import GEPAConfig, EngineConfig, ReflectionConfig, o
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 PROMPT_DIR = ROOT / "src/gpt/template"
-SEED_CANDIDATE = (PROMPT_DIR / "template_r2f_system.txt").read_text(encoding="utf-8")
+# Both the system instruction and the user template (few-shot examples, output
+# format) are optimized jointly: the user template carries most of the actual
+# task-specific rules (BREAK/AND format, worked examples), so leaving it fixed
+# would hide that content from GEPA's reflection.
+SEED_CANDIDATE = {
+    "system_prompt": (PROMPT_DIR / "template_r2f_system.txt").read_text(encoding="utf-8"),
+    "user_prompt": (PROMPT_DIR / "template_r2f_user.txt").read_text(encoding="utf-8"),
+}
 MODEL_DIR = Path(
     os.getenv(
         "AAPB_MODEL_DIR",
@@ -33,7 +40,7 @@ MODEL_DIR = Path(
 )
 CUDA_DEVICE = os.getenv("AAPB_DEVICE", "cuda:0")
 SCREEN_SIZE = int(os.getenv("AAPB_GEPA_IMAGE_SIZE", "512"))
-SCREEN_STEPS = int(os.getenv("AAPB_GEPA_STEPS", "16"))
+SCREEN_STEPS = int(os.getenv("AAPB_GEPA_STEPS", "28"))
 BASE_SEED = int(os.getenv("AAPB_GEPA_SEED", "42"))
 RUN_DIR = Path(os.getenv("AAPB_GEPA_RUN_DIR", "output/gepa_aapb_anchor_prompt"))
 
@@ -117,32 +124,32 @@ def build_examples() -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[d
             "existing_target": pair[-1] if pair else target,
         }
 
-    # Use 6 examples per simple category, spread across the three first
-    # training families; the fourth family remains a within-training reserve.
-    train_rows = [
-        row for row in manifest["gepa_train"]
-        if int(row["index"]) // 4 < 3 and int(row["index"]) % 4 in (0, 1)
-    ]
-    if len(train_rows) != 24:
-        raise RuntimeError(f"Expected 24 balanced GEPA training rows, found {len(train_rows)}")
+    # Four simple-category training families (64 rows) plus a small, fixed
+    # sample from each multi-object/complex category (16 rows) so GEPA sees
+    # multi-concept AND/BREAK structure during search too.
+    train_rows = manifest["gepa_train"]
+    if len(train_rows) != 80:
+        raise RuntimeError(f"Expected 80 GEPA training rows, found {len(train_rows)}")
     train = [materialize(row) for row in train_rows]
     val = [materialize(row) for row in manifest["gepa_selection_validation"]]
     audit = [materialize(row) for row in manifest["full_validation_audit"]]
     return train, val, audit
 
 
-def generate_anchor(candidate: str, target: str) -> tuple[str, str]:
+def generate_anchor(candidate: dict[str, str], target: str) -> tuple[str, str]:
     global _client
     if _client is None:
         _client = OpenAI()
-    user_template = (PROMPT_DIR / "template_r2f_user.txt").read_text(encoding="utf-8")
+    user_template = candidate["user_prompt"]
+    if "{prompt}" not in user_template:
+        raise ValueError("Candidate user_prompt dropped the required '{prompt}' placeholder")
     user_prompt = user_template.replace("{prompt}", target)
     response = _client.chat.completions.create(
         model=os.getenv("AAPB_ANCHOR_MODEL", "gpt-6-luna"),
         # temperature=0,
         # max_tokens=700,
         messages=[
-            {"role": "system", "content": candidate},
+            {"role": "system", "content": candidate["system_prompt"]},
             {"role": "user", "content": user_prompt},
         ],
     )
@@ -209,12 +216,18 @@ def judge_image(image_path: Path, target: str) -> tuple[float, dict[str, Any]]:
     return normalized, {"scores_1_to_5": scores, "explanation": str(grade.get("explanation", ""))}
 
 
-def evaluate(candidate: str, example: dict[str, Any]) -> tuple[float, dict[str, Any]]:
-    cache_key = hashlib.sha256((candidate + "\0" + example["name"]).encode()).hexdigest()
+def _candidate_fingerprint(candidate: dict[str, str]) -> str:
+    serialized = json.dumps(candidate, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(serialized.encode()).hexdigest()
+
+
+def evaluate(candidate: dict[str, str], example: dict[str, Any]) -> tuple[float, dict[str, Any]]:
+    candidate_hash = _candidate_fingerprint(candidate)
+    cache_key = hashlib.sha256((candidate_hash + "\0" + example["name"]).encode()).hexdigest()
     if cache_key in _score_cache:
         return _score_cache[cache_key]
     anchor, raw_anchor_response = generate_anchor(candidate, example["target"])
-    prompt_key = hashlib.sha256(candidate.encode()).hexdigest()[:12]
+    prompt_key = candidate_hash[:12]
     item_key = hashlib.sha256(example["name"].encode()).hexdigest()[:12]
     image_path = RUN_DIR / "images" / prompt_key / f"{item_key}_seed{BASE_SEED}.png"
     image_path.parent.mkdir(parents=True, exist_ok=True)
@@ -260,9 +273,14 @@ def main() -> None:
             "preserved while composition remains coherent on unseen RareBench prompts."
         ),
         background=(
-            "The candidate is the R2F system instruction only. Each candidate is judged after generating an SD3 image "
-            "with AAPB. Optimize the rare concept, not general image attractiveness. Keep anchor prompts short and "
-            "semantically close. Avoid unsupported claims and do not change the target prompt."
+            "The candidate has two components: 'system_prompt' (the R2F system instruction) and 'user_prompt' "
+            "(the task template with few-shot examples and output format, containing a literal '{prompt}' "
+            "placeholder that is substituted with the target text at call time -- this placeholder must always be "
+            "kept, verbatim, somewhere in user_prompt). Each candidate is judged after generating an SD3 image with "
+            "AAPB. Optimize the rare concept, not general image attractiveness. Keep anchor prompts short and "
+            "semantically close. Avoid unsupported claims and do not change the target prompt. Most training and "
+            "validation examples are single-object prompts, but a smaller fixed subset uses multi-object prompts "
+            "combining concepts with AND/BREAK; the instructions and examples should handle both."
         ),
         config=GEPAConfig(
             engine=EngineConfig(
@@ -296,7 +314,7 @@ def main() -> None:
     }
     validation_score = result.val_aggregate_scores[result.best_idx]
     report = {
-        "objective": "GEPA optimization of R2F system prompt for AAPB",
+        "objective": "GEPA optimization of R2F system+user prompt for AAPB",
         "screening": {"image_size": SCREEN_SIZE, "steps": SCREEN_STEPS, "seed": BASE_SEED},
         "split": {
             "train": [x["name"] for x in train],
@@ -313,7 +331,8 @@ def main() -> None:
         "engine_run_dir": result.run_dir,
     }
     (RUN_DIR / "result.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    (RUN_DIR / "best_anchor_system_prompt.txt").write_text(best, encoding="utf-8")
+    (RUN_DIR / "best_anchor_system_prompt.txt").write_text(best["system_prompt"], encoding="utf-8")
+    (RUN_DIR / "best_anchor_user_prompt.txt").write_text(best["user_prompt"], encoding="utf-8")
     print(f"Best validation score: {validation_score:.3f}")
     print(f"Validation audit mean: seed={audit_means['seed']:.3f}, best={audit_means['best']:.3f}")
     print(f"Validation audit delta: {report['validation_audit_delta_best_minus_seed']:+.3f}")

@@ -14,7 +14,7 @@ Alternative, more conservative title: **When Do Better Anchors Help Adaptive Aux
 
 AAPB keeps the diffusion sampler fixed and blends the target-conditioned prediction with an auxiliary-anchor prediction using its closed-form, per-step coefficient. Its usefulness therefore depends on the anchor being helpful: an anchor that is too generic may discard the rare attribute, while an anchor that is too close to the target may provide little structural support.
 
-Use GEPA to evolve the **R2F anchor-generation system instruction** against image-level feedback. The optimized component is the rule that turns a target prompt into a frequent, structurally useful anchor. Keep the target prompt, SD3 checkpoint, scheduler, guidance scale, AAPB equation and denoising settings fixed during search. GEPA receives examples of the target, the generated anchor, the resulting image, decomposed scores and failure notes; its reflective mutations try revised anchor instructions, while Pareto selection retains candidates that help different examples or quality dimensions.
+Use GEPA to evolve the **R2F anchor-generation prompt** against image-level feedback. The optimized candidate has two jointly-evolved components: the system instruction and the user template (few-shot examples and required output format). The user template carries most of the task-specific rules (the BREAK/AND replacement format and worked examples), so leaving it fixed would hide that content from GEPA's reflection; both are therefore mutated together, with the user template's literal `{prompt}` substitution placeholder required to survive every mutation. Keep the target prompt, SD3 checkpoint, scheduler, guidance scale, AAPB equation and denoising settings fixed during search. GEPA receives examples of the target, the generated anchor, the resulting image, decomposed scores and failure notes; its reflective mutations try revised anchor instructions, while Pareto selection retains candidates that help different examples or quality dimensions.
 
 The paper question is:
 
@@ -37,7 +37,7 @@ These are hypotheses, not established findings.
 
 ### 4.1 GEPA candidate
 
-The candidate is one text artifact: the R2F system instruction. It must produce a structured anchor record, for example:
+The candidate is a named-component text artifact, `{"system_prompt": ..., "user_prompt": ...}`, evolved jointly: the R2F system instruction and the user template (few-shot examples plus output format, including the `{prompt}` substitution placeholder). It must produce a structured anchor record, for example:
 
 ```json
 {
@@ -82,12 +82,12 @@ The search judge is a proxy, not ground truth. The final evaluator must use a di
 
 RareBench has 320 target prompts across eight categories in this checkout. Split by **concept/template groups**, not randomly by individual row, so closely related prompts do not leak from GEPA search into validation or test. First inspect each file and define groups (for example, a rare attribute paired with its four object instances). Freeze the split manifest before running GEPA.
 
-Proposed structure:
+Proposed structure (hybrid: mostly simple-object search, with a small fixed multi-object sample so GEPA also sees the AND/BREAK multi-concept format during search):
 
-- **GEPA search data:** 24 prompts, balanced across the four simple categories (single-property, shape, texture, action): six per category, drawn from training families.
-- **GEPA selection set:** 8 fixed prompts, two per simple category, from a disjoint validation family.
-- **Full validation audit:** 8 other prompts from those same four validation families, scored after search and separately from GEPA candidate selection.
-- **Final test:** 240 prompts: the remaining five simple concept families per simple category, plus all prompts from the four complex/multi categories. This measures transfer to unseen simple families and composition-heavy categories; primitive concepts may overlap, so do not call it a fully attribute-disjoint test.
+- **GEPA search data:** 80 prompts: 64 balanced across the four simple categories (single-property, shape, texture, action), 16 per category using all four training families, plus 4 prompts from each of the four complex/multi categories (rows 0, 10, 20, 30 of each 40-row file, evenly spaced, fixed).
+- **GEPA selection set:** 16 fixed prompts: 8 (two per simple category) from a disjoint validation family, plus 2 from each complex/multi category (row 5 and 25 of each file).
+- **Full validation audit:** 16 other prompts: 8 from those same four simple validation families, plus 2 from each complex/multi category (row 15 and 35 of each file), scored after search and separately from GEPA candidate selection.
+- **Final test:** 208 prompts: the remaining five simple concept families per simple category, plus the remaining 32 of 40 prompts (80%) from each of the four complex/multi categories. This still measures transfer to unseen simple families and mostly-unseen composition-heavy categories; primitive concepts may overlap, and multi-object categories are no longer fully held out, so do not call it a fully attribute- or category-disjoint test — report the small train/val exposure to multi-object prompts explicitly when interpreting H1 on those categories.
 
 Keep prompt text, concept-group IDs and split assignment in a versioned JSON/CSV manifest. No test score may influence GEPA mutations, candidate selection, thresholds or prompt wording.
 
@@ -173,7 +173,7 @@ Before unlocking test results, register these provisional thresholds and revise 
 1. **Audit (before runs):** read full AAPB, ADAPT, RATTPO, minority-prompt optimization and score-replacement papers; inspect their code; confirm the actual RareBench concept-group structure; record model/checkpoint hashes and evaluator versions.
 2. **Instrument and freeze:** add robust JSON anchor parsing, cache each generated image/judgment by candidate-prompt hash + example + seed, and write the split manifest. Verify the scoring rubric on a small blind set.
 3. **Pilot:** time 10 paired images, measure VRAM and API cost, calibrate the evaluator against human ratings, and estimate variance. This sets a realistic full-run budget.
-4. **GEPA search:** optimize only the R2F system instruction on training examples and the fixed validation set; save the full Pareto frontier and traces.
+4. **GEPA search:** optimize the R2F system instruction and user template jointly on training examples and the fixed validation set; save the full Pareto frontier and traces.
 5. **Validation audit:** compare seed prompt, GEPA candidate and equal-budget search baseline across all validation groups. Freeze the winning candidate before test.
 6. **Confirmatory run:** generate all paired test images at 1024px/50 steps for three seeds, run independent metrics and blinded human review.
 7. **Write-up:** report methods, exact prompts, checkpoint/version identifiers, total compute/API cost, confidence intervals, failure cases, novelty limitations and released evaluation manifests.
