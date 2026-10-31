@@ -62,9 +62,14 @@ PYTHONPATH=src python src/inference.py \
     --out_path output/ \
     --seed 42
 
-# All 8 RareBench categories
+# All 8 rewrite_gepa categories, both prompt versions
 bash src/run_rarebench.sh
 ```
+
+The runner reads `../benchmark/rewrite_gepa/*.json` and saves images under
+`output/rewrite_gepa/r2f_prompt/<category>/` and
+`output/rewrite_gepa/r2f_prompt_rewrite/<category>/`. Set `OUT_PATH` to choose
+another output root. The same seed is used for both prompt versions.
 
 Key arguments:
 | Argument | Default | Description |
