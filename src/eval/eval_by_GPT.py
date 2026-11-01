@@ -134,7 +134,24 @@ async def _fetch_gpt5_response(session, payload, headers):
         raise Exception(f"OpenAI API Error: {output['error']}")
     if "output" not in output:
         raise Exception(f"Unexpected API response: {json.dumps(output, indent=2)}")
-    text = output["output"][0]["content"][0]["text"]
+    # Responses may put a reasoning item before the final message. Find the
+    # scored text instead of assuming the first output item is the message.
+    text = next(
+        (
+            content["text"]
+            for item in output["output"]
+            for content in item.get("content", [])
+            if content.get("type") == "output_text" and "text" in content
+        ),
+        None,
+    )
+    if text is None:
+        raise Exception(
+            "No output text in GPT-5.2 response: "
+            f"status={output.get('status')}, "
+            f"incomplete_details={output.get('incomplete_details')}, "
+            f"output_types={[item.get('type') for item in output['output']]}"
+        )
     score, explanation = parse_gpt_response(text)
     return score, explanation
 
