@@ -6,6 +6,7 @@ import asyncio
 import aiohttp
 import requests
 import numpy as np
+import re
 
 EVAL_PROMPT_TEMPLATE = (
     "You are my assistant to evaluate the correspondence of the image to a given text prompt. "
@@ -76,19 +77,19 @@ def parse_gpt_response(text):
 
 
 def extract_prompt_from_filename(filename):
-    """Extract prompt text from filename. Handles: idx_prompt.png, idx_seed42_prompt.png, prompt.png"""
-    name = filename.removesuffix(".png")
-    parts = name.split("_")
-    try:
-        int(parts[0])
-        # Has numeric prefix — check for seed
-        if len(parts) > 1 and parts[1].startswith("seed"):
-            return "_".join(parts[2:])
-        return "_".join(parts[1:])
-    except ValueError:
-        if parts[0].startswith("seed"):
-            return "_".join(parts[1:])
-        return name
+    """Extract the prompt suffix from indexed or seed-prefixed image names."""
+    name = os.path.basename(filename).removesuffix(".png")
+    for pattern in (
+        r"^\d+_seed_?\d+_(.+)$",  # idx_seed42_prompt.png or idx_seed_42_prompt.png
+        r"^\d+_\d+_(.+)$",        # idx_42_prompt.png
+        r"^\d+_(.+)$",            # idx_prompt.png
+    ):
+        match = re.match(pattern, name)
+        if match:
+            return match.group(1).strip()
+    if name.startswith("seed"):
+        return name.split("_", 1)[-1]
+    return name
 
 
 def eval_gpt4(img_path, prompt, api_key):
