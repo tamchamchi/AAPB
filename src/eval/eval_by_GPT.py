@@ -27,6 +27,10 @@ EVAL_PROMPT_TEMPLATE = (
 MAX_RETRIES = 3
 
 
+class NonRetryableAPIError(RuntimeError):
+    """An API request error that cannot be fixed by repeating the same request."""
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -89,8 +93,9 @@ def extract_prompt_from_filename(filename):
 
 def eval_gpt4(img_path, prompt, api_key):
     """Evaluate image-prompt alignment using GPT-4o (single request)."""
+    print(prompt)
     payload = {
-        "model": "gpt-4o-2024-05-13",
+        "model": "gpt-6-luna",
         "messages": [
             {
                 "role": "user",
@@ -102,20 +107,43 @@ def eval_gpt4(img_path, prompt, api_key):
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/jpeg;base64,{encode_image(img_path)}"
+                            "url": f"data:image/png;base64,{encode_image(img_path)}"
                         },
                     },
                 ],
             }
         ],
-        "max_tokens": 4096,
+        # "max_tokens": 4096,
     }
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
     response = requests.post(
-        "https://api.openai.com/v1/chat/completions", headers=headers, json=payload
+        "https://api.openai.com/v1/chat/completions", headers=headers,
+        json=payload, timeout=180,
     )
-    output = response.json()
-
+    try:
+        output = response.json()
+    except ValueError as exc:
+        raise RuntimeError(
+            f"OpenAI HTTP {response.status_code}: non-JSON response "
+            f"{response.text[:500]!r}"
+        ) from exc
+    if not response.ok or "error" in output:
+        error = output.get("error") or {}
+        if not isinstance(error, dict):
+            error = {"message": str(error)}
+        message = (f"OpenAI HTTP {response.status_code}: "
+                   f"{error.get('message', 'unknown error')} "
+                   f"(type={error.get('type')}, code={error.get('code')})")
+        if response.status_code not in (408, 429) and response.status_code < 500:
+            raise NonRetryableAPIError(message)
+        if error.get("code") == "insufficient_quota":
+            raise NonRetryableAPIError(message)
+        raise RuntimeError(message)
+    if not output.get("choices"):
+        raise RuntimeError(
+            f"OpenAI HTTP {response.status_code}: missing choices "
+            f"(response keys={list(output)})"
+        )
     text = output["choices"][0]["message"]["content"]
     score, explanation = parse_gpt_response(text)
     return {"score": score, "explanation": explanation}
@@ -134,24 +162,7 @@ async def _fetch_gpt5_response(session, payload, headers):
         raise Exception(f"OpenAI API Error: {output['error']}")
     if "output" not in output:
         raise Exception(f"Unexpected API response: {json.dumps(output, indent=2)}")
-    # Responses may put a reasoning item before the final message. Find the
-    # scored text instead of assuming the first output item is the message.
-    text = next(
-        (
-            content["text"]
-            for item in output["output"]
-            for content in item.get("content", [])
-            if content.get("type") == "output_text" and "text" in content
-        ),
-        None,
-    )
-    if text is None:
-        raise Exception(
-            "No output text in GPT-5.2 response: "
-            f"status={output.get('status')}, "
-            f"incomplete_details={output.get('incomplete_details')}, "
-            f"output_types={[item.get('type') for item in output['output']]}"
-        )
+    text = output["output"][0]["content"][0]["text"]
     score, explanation = parse_gpt_response(text)
     return score, explanation
 
@@ -177,7 +188,7 @@ async def _eval_gpt5_async(img_path, prompt, api_key, reasoning_effort="medium")
                 ],
             }
         ],
-        "max_output_tokens": 4096,
+        # "max_output_tokens": 4096,
         "store": False,
         "temperature": 1.0,
     }
@@ -195,16 +206,15 @@ def collect_image_files(img_folder):
     if not os.path.isdir(img_folder):
         return []
     entries = os.listdir(img_folder)
-    subdirs = [d for d in entries if os.path.isdir(os.path.join(img_folder, d))]
-    if subdirs:
-        files = []
-        for sd in subdirs:
-            sd_path = os.path.join(img_folder, sd)
-            files.extend(
-                os.path.join(sd, f) for f in os.listdir(sd_path) if f.endswith(".png")
-            )
-        return sorted(files)
-    return sorted(f for f in entries if f.endswith(".png"))
+    files = [f for f in entries if f.endswith(".png")]
+    for sd in entries:
+        sd_path = os.path.join(img_folder, sd)
+        if sd == "eval_results" or not os.path.isdir(sd_path):
+            continue
+        files.extend(
+            os.path.join(sd, f) for f in os.listdir(sd_path) if f.endswith(".png")
+        )
+    return sorted(files)
 
 
 def compute_mean_score(result):
@@ -239,7 +249,8 @@ def main():
     save_dir = args.out_path or os.path.join(img_folder, "eval_results")
     os.makedirs(save_dir, exist_ok=True)
     save_file = os.path.join(
-        save_dir, f"scores_by_{args.gpt_model.replace('-', '')}.json"
+        # save_dir, f"scores_by_{args.gpt_model.replace('-', '')}.json"
+        save_dir, f"scores_by_gpt6_luna.json"
     )
 
     # Resume from existing results
@@ -272,10 +283,14 @@ def main():
                 result[file] = output
                 print(f"  score: {output['score']}")
                 break
+            except NonRetryableAPIError:
+                raise
             except Exception as e:
                 print(f"  attempt {attempt}/{MAX_RETRIES} failed: {e}")
                 if attempt == MAX_RETRIES:
-                    print(f"  SKIPPING {file} after {MAX_RETRIES} failures")
+                    raise RuntimeError(
+                        f"Stopping after {MAX_RETRIES} failures for {file}"
+                    ) from e
 
         with open(save_file, "w") as f:
             json.dump(result, f, indent=4)
